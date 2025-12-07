@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ainslie's Advent</title>
+
+    <!-- ADLaM Display font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ADLaM+Display&display=swap" rel="stylesheet">
+
+    <style>
+        :root{
+            --bg: rgb(240, 221, 213);   /* page background */
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            font-family: 'ADLaM Display', system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            font-size: 48px;
+            letter-spacing: 2px;
+            color: rgb(151, 166, 186);
+            text-align: center;
+        }
+
+        /* 6×4 grid */
+        .calendar {
+            width: 90vw;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 24px;
+        }
+
+        /* Square advent doors */
+        .door {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            border: none;
+            cursor: pointer;
+            padding: 12px;
+            color: white;
+            font-size: 28px;
+            overflow: hidden;
+            transition: transform 0.2s, filter 0.2s, opacity 0.2s;
+        }
+
+        /* Smaller semicircle cut-out at top */
+        .door::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -55%;
+            width: 60%;
+            aspect-ratio: 1 / 1;
+            background: var(--bg);
+            border-radius: 50%;
+        }
+
+        /* Pastel colour cycle */
+        .door:nth-child(4n + 1) { background-color: #91A3C6; } /* Blue */
+        .door:nth-child(4n + 2) { background-color: #C5DDC8; } /* Mint */
+        .door:nth-child(4n + 3) { background-color: #EAB6B5; } /* Pink */
+        .door:nth-child(4n + 0) { background-color: #BD8D64; } /* Brown */
+
+        /* Hover effect for unlocked doors */
+        .door.unlocked:hover {
+            filter: brightness(1.08);
+            transform: translateY(-4px);
+        }
+
+        /* A door that has been opened */
+        .door.open {
+            filter: brightness(1.15);
+        }
+
+        /* Locked doors (future days) */
+        .door.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ===== Popup styles ===== */
+
+        /* Popup overlay background */
+        .popup {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0,0,0,0.5);
+            display: none;              /* hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* Popup content box */
+        .popup-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px 20px 20px 20px;
+            width: 320px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            position: relative;
+            font-family: 'ADLaM Display', system-ui, sans-serif;
+        }
+
+        .popup-content h2 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: rgb(151, 166, 186);
+            font-size: 28px;
+        }
+
+        .popup-content p {
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: #444;
+            font-size: 18px;
+        }
+
+        .popup-content a {
+            display: inline-block;
+            margin-top: 4px;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background-color: #91A3C6;
+            color: white;
+        }
+
+        .popup-content a:hover {
+            filter: brightness(1.1);
+        }
+
+        /* Close "X" button */
+        .close {
+            position: absolute;
+            right: 10px;
+            top: 6px;
+            cursor: pointer;
+            font-size: 24px;
+            line-height: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>AINSLIE'S ADVENT</h1>
+
+    <div class="calendar">
+        <button class="door" data-day="1">1</button>
+        <button class="door" data-day="2">2</button>
+        <button class="door" data-day="3">3</button>
+        <button class="door" data-day="4">4</button>
+        <button class="door" data-day="5">5</button>
+        <button class="door" data-day="6">6</button>
+        <button class="door" data-day="7">7</button>
+        <button class="door" data-day="8">8</button>
+        <button class="door" data-day="9">9</button>
+        <button class="door" data-day="10">10</button>
+        <button class="door" data-day="11">11</button>
+        <button class="door" data-day="12">12</button>
+        <button class="door" data-day="13">13</button>
+        <button class="door" data-day="14">14</button>
+        <button class="door" data-day="15">15</button>
+        <button class="door" data-day="16">16</button>
+        <button class="door" data-day="17">17</button>
+        <button class="door" data-day="18">18</button>
+        <button class="door" data-day="19">19</button>
+        <button class="door" data-day="20">20</button>
+        <button class="door" data-day="21">21</button>
+        <button class="door" data-day="22">22</button>
+        <button class="door" data-day="23">23</button>
+        <button class="door" data-day="24">24</button>
+    </div>
+
+    <!-- Popup -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span id="closePopup" class="close">&times;</span>
+            <!-- Title now has an ID so we can change it -->
+            <h2 id="popupTitle">Day 1 🎁</h2>
+            <p id="popupMessage"></p>
+            <a id="popupLink" href="#" target="_blank">Click your surprise!</a>
+        </div>
+    </div>
+
+    <script>
+        // === CONFIG FOR TESTING (optional) ===
+        // Set FORCE_DAY to a number (1–24) to pretend it's that day.
+        // Leave as null in real use.
+        const FORCE_DAY = null;
+
+        const today = new Date();
+        const month = today.getMonth(); // 0 = Jan, 11 = Dec
+
+        // Decide which day is allowed (max door index)
+        let allowedDay;
+        if (FORCE_DAY !== null) {
+            allowedDay = FORCE_DAY;
+        } else if (month === 11) { // December
+            allowedDay = Math.min(24, today.getDate());
+        } else {
+            // Not December: unlock all doors for testing
+            allowedDay = 24;
+        }
+
+        const doors = document.querySelectorAll('.door');
+
+        // Popup elements
+        const popup = document.getElementById("popup");
+        const popupTitle = document.getElementById("popupTitle");
+        const popupMessage = document.getElementById("popupMessage");
+        const popupLink = document.getElementById("popupLink");
+        const closePopup = document.getElementById("closePopup");
+
+        doors.forEach(door => {
+            const day = Number(door.dataset.day);
+
+            if (day > allowedDay) {
+                // Future day: lock it
+                door.classList.add('locked');
+                door.disabled = true;
+            } else {
+                // Today or earlier: unlock it
+                door.classList.add('unlocked');
+
+                door.addEventListener('click', () => {
+                    // Visually mark opened
+                    door.classList.add('open');
+
+                    // Set popup title dynamically based on the day clicked
+                    popupTitle.textContent = "Day " + day + " 🎁";
+
+                    if (day === 1) {
+                        // === CUSTOM TEXT + LINK FOR DAY 1 ===
+                        popupMessage.textContent = "Caesar cipher. Key: no. of songs (+)";
+                        popupLink.href = "https://open.spotify.com/playlist/4l8Fmx1v19NVKdhIz6wCjv?si=90b147b248ed4e84";
+                        popup.style.display = "flex";
+
+                    } else if (day === 2) {
+                        // === CUSTOM TEXT + LINK FOR DAY 2 ===
+                        popupMessage.textContent = "Crossword Puzzle";
+                        popupLink.href = "https://crosswordlabs.com/view/2025-12-01-1257";
+                        popup.style.display = "flex";
+
+                    } else if (day==3) {
+                        popupMessage.textContent = "Next coffee is on me!";
+                        popupLink.href = "https://eGft.in/cOLL1bTUDeu15RZ";
+                        popup.style.display = "flex";
+                    } else if (day==4) {
+                        popupMessage.textContent = "A digital Manny for you!";
+                        popupLink.href = "Manny.gif"
+                        popupLink.download = "Manny.gif";
+                        popupLink.textContent = "Download GIF";
+                        popupLink.target = "_self";
+
+                        popup.style.display = "flex";
+
+                    }else if (day==5) {
+                        popupMessage.textContent = "A little luck for your first exam!";
+                        popupLink.href = "https://gifft.me/o/l/iylggpq0q6t1mlrkiknndrg2";
+                        popup.style.display = "flex";
+                    
+                    }else if (day==6) {
+                        popupMessage.textContent = "In case NYT isn't doing it for you";
+                        popupLink.href = "https://connections.swellgarfo.com/game/-OfhQ8R7pJsNJShYvaKd";
+                        popup.style.display = "flex";
+                    
+                    } else if (day==7) {
+                        popupMessage.textContent = "More coffe for Ainslie";
+                        popupLink.href = "https://eGft.in/fZ4QtBxJysLSrbz";
+                        popup.style.display = "flex";
+
+                    
+                    }else {
+                        // Default popup for other days (you can customize each later)
+                        popupMessage.textContent = "Your surprise is coming soon!";
+                        popupLink.href = "#";
+                        popup.style.display = "flex";
+                    }
+                });
+            }
+        });
+
+        // Close popup on X click
+        closePopup.addEventListener("click", () => {
+            popup.style.display = "none";
+        });
+
+        // Also close popup if user clicks outside the popup box
+        window.addEventListener("click", (event) => {
+            if (event.target === popup) {
+                popup.style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>
